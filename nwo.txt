@@ -1,0 +1,9 @@
+"nwo"
+{
+	"base"			"base"
+	"title"			"New World Online"
+	"category"		"other"
+
+	"menusystem"	"1"
+	"settings"		{}
+}
