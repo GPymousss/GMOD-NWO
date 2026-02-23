@@ -3,6 +3,6 @@ hook.Add("PlayerInitialSpawn", "Module:Spawn:HandleInitial", function (ply)
 		net.Start("Module:Spawn:OpenMainVGUI")
 		net.Send(ply)
 
-		ply:KillSilent()
+		-- ply:KillSilent()
 	end)
 end)

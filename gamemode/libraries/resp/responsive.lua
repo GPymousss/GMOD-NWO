@@ -1,5 +1,5 @@
-local BASE_WIDTH = 1920
-local BASE_HEIGHT = 1080
+local BASE_WIDTH = 2560
+local BASE_HEIGHT = 1440
 local BASE_RATIO = 16/9
 local scaleX, scaleY, aspectRatio
 
@@ -44,7 +44,13 @@ end
 local function Initialize()
 	UpdateScaleFactors()
 	for i = 1, 100 do
-		gCreateRespFont("Inter:" .. i, "Lora", i, 400)
+		gCreateRespFont("OxaniumExtraLight:" .. i, "Oxanium ExtraLight", i, 200)
+		gCreateRespFont("OxaniumLight:" .. i, "Oxanium Light", i, 300)
+		gCreateRespFont("OxaniumRegular:" .. i, "Oxanium", i, 400)
+		gCreateRespFont("OxaniumMedium:" .. i, "Oxanium Medium", i, 500)
+		gCreateRespFont("OxaniumSemiBold:" .. i, "Oxanium SemiBold", i, 600)
+		gCreateRespFont("OxaniumBold:" .. i, "Oxanium Bold", i, 700)
+		gCreateRespFont("OxaniumExtraBold:" .. i, "Oxanium ExtraBold", i, 800)
 	end
 end
 

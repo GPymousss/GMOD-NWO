@@ -36,6 +36,8 @@ include("libraries/mysql/delete.lua")
 AddCSLuaFile("libraries/anims/anims.lua")
 include("libraries/anims/anims.lua")
 
+-- Module Spawn
+AddCSLuaFile("modules/spawn/vgui/cl_navbar.lua")
 AddCSLuaFile("modules/spawn/vgui/cl_main.lua")
 include("modules/spawn/sv_net.lua")
 include("modules/spawn/sv_hook.lua") 

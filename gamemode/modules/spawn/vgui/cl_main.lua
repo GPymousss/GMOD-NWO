@@ -1,23 +1,31 @@
 local PANEL = {}
 local CurrentFrame = nil
+local CurrentMaterials = {
+	Material("materials/vgui/modules/spawn/background.png", "noclamp smooth"),
+}
 
 function PANEL:UpdateResponsive()
 	if IsValid(self) then
 		self:gSetPos(0, 0)
-		self:gSetSize(1920, 1080)
+		self:gSetSize(2560, 1440)
 	end
 end
 
 function PANEL:Init()
 	self:gSetPos(0, 0)
-	self:gSetSize(1920, 1080)
+	self:gSetSize(2560, 1440)
 	self:SetTitle("")
 	self:ShowCloseButton(true)
 	self:SetDraggable(false)
 	self:MakePopup()
 	self:gFadeIn(0.75)
+	self.SubFrame = vgui.Create("Module:Spawn:VGUI:NavBar", self)
 
 	hook.Add("OnScreenSizeChanged", self, self.UpdateResponsive)
+end
+
+function PANEL:Paint(w, h)
+	pMaterials(CurrentMaterials[1], 0, 0, w, h, Color(255, 255, 255))
 end
 
 function PANEL:OnClose()
