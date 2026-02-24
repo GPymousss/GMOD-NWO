@@ -37,7 +37,11 @@ AddCSLuaFile("libraries/anims/anims.lua")
 include("libraries/anims/anims.lua")
 
 -- Module Spawn
+AddCSLuaFile("modules/spawn/sh_utils.lua")
+AddCSLuaFile("modules/spawn/vgui/cl_register.lua")
 AddCSLuaFile("modules/spawn/vgui/cl_navbar.lua")
 AddCSLuaFile("modules/spawn/vgui/cl_main.lua")
+GPYMOUSSS.SpawnUtils = include("modules/spawn/sh_utils.lua")
+include("modules/spawn/sv_data.lua")
 include("modules/spawn/sv_net.lua")
-include("modules/spawn/sv_hook.lua") 
+include("modules/spawn/sv_hook.lua")

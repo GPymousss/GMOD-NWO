@@ -1,7 +1,7 @@
 local PANEL = {}
 local CurrentFrame = nil
 local CurrentMaterials = {
-	Material("materials/vgui/modules/spawn/background.png", "noclamp smooth"),
+	Material("materials/vgui/modules/spawn/main/background.png", "noclamp smooth"),
 }
 
 function PANEL:UpdateResponsive()
@@ -15,7 +15,7 @@ function PANEL:Init()
 	self:gSetPos(0, 0)
 	self:gSetSize(2560, 1440)
 	self:SetTitle("")
-	self:ShowCloseButton(true)
+	self:ShowCloseButton(false)
 	self:SetDraggable(false)
 	self:MakePopup()
 	self:gFadeIn(0.75)
@@ -28,13 +28,23 @@ function PANEL:Paint(w, h)
 	pMaterials(CurrentMaterials[1], 0, 0, w, h, Color(255, 255, 255))
 end
 
-function PANEL:OnClose()
+function PANEL:CloseMain()
+	if self.IsClosing then return end
+	self.IsClosing = true
+
+	self:SetMouseInputEnabled(false)
+	self:SetKeyboardInputEnabled(false)
+
 	net.Start("Module:Spawn:LoadingFinish")
 	net.SendToServer()
 
-	self:gFadeOut(0.75, 0, function()
+	self:gFadeOut(1.5, 0, function()
 		self:Remove()
 	end)
+end
+
+function PANEL:OnClose()
+	return false
 end
 
 function PANEL:OnRemove()
