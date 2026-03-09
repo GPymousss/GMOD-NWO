@@ -1,0 +1,1 @@
+util.AddNetworkString("Module:Admin:OpenMainVGUI")

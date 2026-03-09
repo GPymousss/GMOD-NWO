@@ -45,3 +45,10 @@ GPYMOUSSS.SpawnUtils = include("modules/spawn/sh_utils.lua")
 include("modules/spawn/sv_data.lua")
 include("modules/spawn/sv_net.lua")
 include("modules/spawn/sv_hook.lua")
+
+-- Module Admin
+AddCSLuaFile("modules/admin/sh_init.lua")
+AddCSLuaFile("modules/admin/vgui/cl_main.lua")
+include("modules/admin/sh_init.lua")
+include("modules/admin/sv_net.lua")
+include("modules/admin/sv_hook.lua")

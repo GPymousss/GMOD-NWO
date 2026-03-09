@@ -1,12 +1,21 @@
 local PANEL = {}
 local CurrentFrame = nil
 local SpawnUtils = GPYMOUSSS.SpawnUtils
+local PlayerCount = 0
 local CurrentMaterials = {
 	Material("materials/vgui/modules/spawn/register/logo.png", "noclamp smooth"),
 	Material("materials/vgui/modules/spawn/register/entry.png", "noclamp smooth"),
 	Material("materials/vgui/modules/spawn/register/buttonoff.png", "noclamp smooth"),
 	Material("materials/vgui/modules/spawn/register/buttonon.png", "noclamp smooth")
 }
+
+local function gValidateField(value)
+	if SpawnUtils.IsEmpty(value) then return nil end
+	if value:find("%s") then return false end
+	if not SpawnUtils.IsValidLength(value) then return false end
+	if not SpawnUtils.IsAlpha(value) then return false end
+	return true
+end
 
 function PANEL:UpdateResponsive()
 	if IsValid(self) then
@@ -50,6 +59,39 @@ function PANEL:UpdateResponsive()
 	end
 end
 
+local function gMakeTextEntryPaint(entry, placeholderText)
+	entry.Paint = function(self, w, h)
+		local text = self:GetValue()
+
+		if text == "" then
+			text = placeholderText
+			if self.HasError then
+				surface.SetTextColor(220, 50, 50)
+			else
+				surface.SetTextColor(150, 150, 150)
+			end
+		else
+			if self.FieldValid == true then
+				surface.SetTextColor(255, 255, 255)
+			else
+				surface.SetTextColor(220, 50, 50)
+			end
+		end
+
+		surface.SetFont("OxaniumRegular:30")
+		local tw, th = surface.GetTextSize(text)
+		surface.SetTextPos((w - tw) / 2, (h - th) / 2)
+		surface.DrawText(text)
+	end
+end
+
+local function gMakeOnValueChange(entry)
+	entry.OnValueChange = function(self, value)
+		self.HasError   = false
+		self.FieldValid = gValidateField(value)
+	end
+end
+
 function PANEL:Body()
 	self.DImageLogo = vgui.Create("DPanel", self)
 	self.DImageLogo:gSetPos(1194, 282)
@@ -69,7 +111,7 @@ function PANEL:Body()
 	self.DLabelPlayerNum:gSetPos(1023, 602)
 	self.DLabelPlayerNum:gSetSize(520, 30)
 	self.DLabelPlayerNum.Paint = function(self, w, h)
-		draw.SimpleText("Nombre d'enregistrement de joueur : 10000000", "OxaniumExtraLight:24", w/2, h/2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Nombre d'enregistrement de joueur : " .. PlayerCount, "OxaniumExtraLight:24", w/2, h/2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
 	self.DPanelBGFirstN = vgui.Create("DPanel", self)
@@ -89,27 +131,12 @@ function PANEL:Body()
 	self.DTextFirstN:SetPaintBackground(false)
 	self.DTextFirstN:SetUpdateOnType(true)
 	self.DTextFirstN:SetDrawLanguageID(false)
-	self.DTextFirstN:SetCursorColor(Color(255,255,255))
+	self.DTextFirstN:SetCursorColor(Color(255, 255, 255))
 	self.DTextFirstN:SetText("")
-	self.DTextFirstN.Paint = function(self, w, h)
-		local text = self:GetValue()
-		if text == "" then
-			text = self:GetPlaceholderText()
-			if self.HasError then
-				surface.SetTextColor(220, 50, 50)
-			else
-				surface.SetTextColor(150, 150, 150)
-			end
-		else
-			self.HasError = false
-			surface.SetTextColor(255, 255, 255)
-		end
+	self.DTextFirstN.FieldValid = nil
 
-		surface.SetFont("OxaniumRegular:30")
-		local tw, th = surface.GetTextSize(text)
-		surface.SetTextPos((w - tw) / 2, (h - th) / 2)
-		surface.DrawText(text)
-	end
+	gMakeTextEntryPaint(self.DTextFirstN, "Daniel")
+	gMakeOnValueChange(self.DTextFirstN)
 
 	self.DPanelBGLastN = vgui.Create("DPanel", self)
 	self.DPanelBGLastN:gSetPos(1088, 770)
@@ -128,27 +155,12 @@ function PANEL:Body()
 	self.DTextLastN:SetPaintBackground(false)
 	self.DTextLastN:SetUpdateOnType(true)
 	self.DTextLastN:SetDrawLanguageID(false)
-	self.DTextLastN:SetCursorColor(Color(255,255,255))
+	self.DTextLastN:SetCursorColor(Color(255, 255, 255))
 	self.DTextLastN:SetText("")
-	self.DTextLastN.Paint = function(self, w, h)
-		local text = self:GetValue()
-		if text == "" then
-			text = self:GetPlaceholderText()
-			if self.HasError then
-				surface.SetTextColor(220, 50, 50)
-			else
-				surface.SetTextColor(150, 150, 150)
-			end
-		else
-			self.HasError = false
-			surface.SetTextColor(255, 255, 255)
-		end
+	self.DTextLastN.FieldValid = nil
 
-		surface.SetFont("OxaniumRegular:30")
-		local tw, th = surface.GetTextSize(text)
-		surface.SetTextPos((w - tw) / 2, (h - th) / 2)
-		surface.DrawText(text)
-	end
+	gMakeTextEntryPaint(self.DTextLastN, "Crowman")
+	gMakeOnValueChange(self.DTextLastN)
 
 	self.DButtonCancel = vgui.Create("DButton", self)
 	self.DButtonCancel:gSetPos(1044, 910)
@@ -237,3 +249,7 @@ function PANEL:OnRemove()
 end
 
 vgui.Register("Module:Spawn:VGUI:Register", PANEL, "DPanel")
+
+net.Receive("Module:Spawn:PlayerCount", function(len)
+	PlayerCount = net.ReadUInt(32)
+end)

@@ -5,6 +5,21 @@ util.AddNetworkString("Module:Spawn:LoadingFinish")
 util.AddNetworkString("Module:Spawn:RegisterPlayer")
 util.AddNetworkString("Module:Spawn:RequestRegisterIsValid")
 util.AddNetworkString("Module:Spawn:RequestRegisterConfirmation")
+util.AddNetworkString("Module:Spawn:PlayerCount")
+
+local function gSendPlayerCount(target)
+	gSQLiteSelect("spawn_register", {"steamid"}, nil, function(result, err)
+		local count = (result and result ~= true and #result) or 0
+
+		net.Start("Module:Spawn:PlayerCount")
+		net.WriteUInt(count, 32)
+		if target then
+			net.Send(target)
+		else
+			net.Broadcast()
+		end
+	end)
+end
 
 net.Receive("Module:Spawn:LoadingFinish", function(len, ply)
 	ply:Spawn()
@@ -19,6 +34,8 @@ net.Receive("Module:Spawn:RequestRegisterIsValid", function(len, ply)
 		net.Start("Module:Spawn:RequestRegisterConfirmation")
 		net.WriteBool(isRegistered)
 		net.Send(ply)
+
+		gSendPlayerCount(ply)
 	end)
 end)
 
@@ -55,6 +72,10 @@ net.Receive("Module:Spawn:RegisterPlayer", function(len, ply)
 			net.Start("Module:Spawn:RequestRegisterConfirmation")
 			net.WriteBool(success == true)
 			net.Send(ply)
+
+			if success == true then
+				gSendPlayerCount(nil)
+			end
 		end)
 	end)
 end)

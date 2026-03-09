@@ -17,7 +17,7 @@ function SpawnUtils.IsValidLength(str, min, max)
 end
 
 function SpawnUtils.IsAlpha(str)
-	return SpawnUtils.Trim(str):match("^[%a%-%s]+$") ~= nil
+	return SpawnUtils.Trim(str):match("^[%a%-]+$") ~= nil
 end
 
 function SpawnUtils.Capitalize(str)
